@@ -30,6 +30,7 @@ interface UserData {
 export const CalculatoPage = () => {
   const [days, setDays] = useState<string[]>(["1", "15", "30", "90"]);
   const [values, setValues] = useState<number[]>([]);
+  const [amount, setAmount] = useState<number>();
   const Calculator = (userData: UserData) => {
     const { amount, installments, mdr, days } = userData;
     axios
@@ -65,9 +66,10 @@ export const CalculatoPage = () => {
   } = useForm<UserData>({ resolver: yupResolver(formSchema) });
 
   const onSubmit = (data: UserData) => {
-    console.log(data);
     Calculator(data);
   };
+
+  console.log(amount);
 
   return (
     <Container>
@@ -84,7 +86,13 @@ export const CalculatoPage = () => {
             inputMode="numeric"
             {...register("amount")}
           /> */}
-          <Input type="number" {...register("amount")} />
+          <Input
+            type="number"
+            value={amount}
+            {...register(`amount`)}
+            onChange={(e: any) => setAmount(e.target.value)}
+            onBlur={(e: any) => setAmount(e.target.value / 100)}
+          />
           <Paragraph>{errors.amount?.message}</Paragraph>
           <Label>Em quantas parcelas *</Label>
           <Input type="number" {...register("installments")} />
